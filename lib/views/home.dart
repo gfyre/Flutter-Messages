@@ -1,4 +1,7 @@
+import 'package:Messages/data/data.dart';
 import 'package:flutter/material.dart';
+
+import '../models/story_model.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -6,6 +9,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List<StoryModel> stories = List();
+
+  @override
+  void initState() {
+    super.initState();
+    stories = getStories();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,11 +25,11 @@ class _HomeState extends State<Home> {
         color: Color(0xff171719),
         child: Column(
           children: <Widget>[
+            SizedBox(
+              height: 70,
+            ),
             Row(
               children: <Widget>[
-                SizedBox(
-                  height: 220,
-                ),
                 Text(
                   'Messages',
                   style: TextStyle(
@@ -41,6 +52,23 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
+            SizedBox(
+              height: 40,
+            ),
+            Container(
+              height: 150,
+              child: ListView.builder(
+                itemCount: stories.length,
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return StoryTile(
+                    imgUrl: stories[index].imgUrl,
+                    username: stories[index].userName,
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
@@ -49,8 +77,37 @@ class _HomeState extends State<Home> {
 }
 
 class StoryTile extends StatelessWidget {
+  String imgUrl;
+  String username;
+  StoryTile({@required this.imgUrl, @required this.username});
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      margin: EdgeInsets.only(right: 16),
+      child: Column(
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(60),
+            child: Image.network(
+              imgUrl,
+              height: 80,
+              width: 80,
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            username,
+            style: TextStyle(
+              color: Color(0xff78778a),
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
